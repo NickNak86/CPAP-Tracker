@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CPAP Tracker</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_parts">Parts</string>
+    <string name="nav_equipment">Equipment</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">CPAP Parts Tracker</string>
+    <string name="next_replacement">Next Replacement</string>
+    <string name="days_remaining">%d days remaining</string>
+    <string name="overdue">Overdue by %d days</string>
+    <string name="replace_today">Replace today</string>
+
+    <!-- Parts -->
+    <string name="part_mask_cushion">Mask Cushion</string>
+    <string name="part_mask_frame">Mask Frame</string>
+    <string name="part_headgear">Headgear</string>
+    <string name="part_air_filter">Air Filter</string>
+    <string name="part_water_chamber">Water Chamber</string>
+    <string name="part_tubing">Tubing</string>
+
+    <!-- Equipment -->
+    <string name="equipment_machine">BiPAP Machine</string>
+    <string name="equipment_mask">Mask</string>
+    <string name="machine_model">ResMed AirCurve 10 VAuto</string>
+    <string name="mask_model">ResMed AirFit F40</string>
+
+    <!-- Actions -->
+    <string name="mark_replaced">Mark as Replaced</string>
+    <string name="order_part">Order Part</string>
+    <string name="view_details">View Details</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Part Replacement Reminders</string>
+    <string name="notification_channel_desc">Notifications for upcoming part replacements</string>
+    <string name="notification_title">Time to Replace %s</string>
+    <string name="notification_body">Your %s should be replaced soon</string>
+</resources>
