@@ -19,6 +19,7 @@ fun PartCard(
     partWithReplacement: PartWithReplacement,
     onMarkReplaced: () -> Unit,
     onOrderPart: () -> Unit,
+    onReorderFromVA: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -114,6 +115,23 @@ fun PartCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
+                // VA Reorder button - always available
+                OutlinedButton(
+                    onClick = onReorderFromVA,
+                    modifier = Modifier.padding(end = 8.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = PrimaryBlue
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.OpenInBrowser,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("VA")
+                }
+
                 if (partWithReplacement.replacement != null && !partWithReplacement.replacement.isOrdered) {
                     OutlinedButton(
                         onClick = onOrderPart,

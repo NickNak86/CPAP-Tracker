@@ -1,7 +1,9 @@
 package com.cpaptracker
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,6 +32,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+
+// VA Reorder URL - requires Login.gov authentication
+const val VA_REORDER_URL = "https://www.va.gov/health-care/order-hearing-aid-or-CPAP-supplies-form/introduction"
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -114,6 +120,21 @@ fun CPAPTrackerNavigation(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    // Function to open VA reorder website
+    val openVAReorderSite: () -> Unit = {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(VA_REORDER_URL))
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(
+                context,
+                "Unable to open browser. URL: $VA_REORDER_URL",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -168,7 +189,8 @@ fun CPAPTrackerNavigation(
                     },
                     onNavigateToAllParts = {
                         navController.navigate("parts_list")
-                    }
+                    },
+                    onReorderFromVA = openVAReorderSite
                 )
             }
 
@@ -190,7 +212,8 @@ fun CPAPTrackerNavigation(
                     },
                     onNavigateBack = {
                         navController.popBackStack()
-                    }
+                    },
+                    onReorderFromVA = openVAReorderSite
                 )
             }
         }

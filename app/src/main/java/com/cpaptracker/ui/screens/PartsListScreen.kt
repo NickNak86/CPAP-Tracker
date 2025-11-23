@@ -21,6 +21,7 @@ fun PartsListScreen(
     onMarkPartReplaced: (Long, LocalDate) -> Unit,
     onMarkPartOrdered: (Long, LocalDate) -> Unit,
     onNavigateBack: () -> Unit,
+    onReorderFromVA: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -70,7 +71,8 @@ fun PartsListScreen(
                     },
                     onOrderPart = {
                         onMarkPartOrdered(partWithReplacement.part.id, LocalDate.now())
-                    }
+                    },
+                    onReorderFromVA = onReorderFromVA
                 )
             }
         }

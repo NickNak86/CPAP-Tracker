@@ -263,7 +263,6 @@ Parts can be in one of these states (defined in `Part.kt`):
 - [ ] No manual part editing UI (can only mark as replaced)
 - [ ] No settings screen
 - [ ] No data export/backup
-- [ ] No VA integration yet
 - [ ] Single equipment profile only
 
 ### Planned Features (Priority Order)
@@ -271,9 +270,30 @@ Parts can be in one of these states (defined in `Part.kt`):
 2. Manual interval editing for parts
 3. Replacement history view
 4. Data backup/restore
-5. VA reorder integration
+5. VA API integration (direct ordering)
 6. Multiple equipment profiles
 7. Cloud sync
+
+---
+
+## VA Integration
+
+### Current Implementation
+- **"VA" button** on each PartCard opens VA reorder website in browser
+- URL: `https://www.va.gov/health-care/order-hearing-aid-or-CPAP-supplies-form/introduction`
+- Requires Login.gov authentication
+
+### Key Files
+- `MainActivity.kt` - Contains `VA_REORDER_URL` constant and `openVAReorderSite()` function
+- `PartCard.kt` - Contains the VA button UI
+- `strings.xml` - Contains VA-related string resources
+
+### Future VA API Integration
+When/if VA provides an API:
+1. Create `VAApiService.kt` in `data/api/`
+2. Add Retrofit dependency for API calls
+3. Implement OAuth flow with Login.gov
+4. Add order status tracking to database
 
 ---
 
@@ -284,6 +304,7 @@ Parts can be in one of these states (defined in `Part.kt`):
 - [ ] Dashboard shows all parts
 - [ ] "Replaced" button updates part dates
 - [ ] "Order" button changes status to Ordered
+- [ ] "VA" button opens VA reorder website in browser
 - [ ] Bottom navigation works
 - [ ] Notifications appear (check after 24 hours)
 

@@ -22,6 +22,7 @@ fun DashboardScreen(
     onMarkPartReplaced: (Long, LocalDate) -> Unit,
     onMarkPartOrdered: (Long, LocalDate) -> Unit,
     onNavigateToAllParts: () -> Unit,
+    onReorderFromVA: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -30,7 +31,7 @@ fun DashboardScreen(
                 title = {
                     Column {
                         Text(
-                            text = "CPAP Tracker",
+                            text = "BiPAP Tracker",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold
                         )
@@ -94,7 +95,8 @@ fun DashboardScreen(
                             },
                             onOrderPart = {
                                 onMarkPartOrdered(partWithReplacement.part.id, LocalDate.now())
-                            }
+                            },
+                            onReorderFromVA = onReorderFromVA
                         )
                     }
                 }
@@ -197,7 +199,7 @@ private fun EmptyState(onNavigateToAllParts: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Start tracking your CPAP parts to get replacement reminders",
+            text = "Start tracking your BiPAP parts to get replacement reminders",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
         )

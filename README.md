@@ -198,13 +198,24 @@ Follow the steps above to build and install directly to your device
 | Standard Tubing | 90 days (3 months) |
 | Elbow Connector | 180 days (6 months) |
 
-## VA Integration (Future Enhancement)
+## VA Integration
 
-Currently in development:
-- Direct VA reorder integration
-- VA supply tracking
-- Automatic reorder reminders based on VA schedules
+### Current Features (v1.0)
+- **"VA" Button** on each part card opens the VA reorder website directly
+- **URL**: https://www.va.gov/health-care/order-hearing-aid-or-CPAP-supplies-form/introduction
+- **Note**: Requires Login.gov authentication to access VA ordering system
+
+### How to Reorder from VA
+1. Open the app and navigate to any part
+2. Tap the **"VA"** button (blue, opens browser)
+3. Sign in with your Login.gov credentials
+4. Complete the VA CPAP supply order form
+
+### Future Enhancements (Planned)
+- Direct VA API integration (if/when available)
+- Automatic reorder reminders based on VA supply schedules
 - VA prescription tracking
+- Order status tracking within the app
 
 ## Customization
 
