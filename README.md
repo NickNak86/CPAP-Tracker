@@ -4,7 +4,7 @@ A modern Android application for tracking BiPAP/CPAP equipment parts and managin
 
 ## Overview
 
-Mike's BiPAP Tracker helps you stay on top of your BiPAP/CPAP equipment maintenance by:
+Mike's BiPAP Tracker helps you stay on top of your BiPAP equipment maintenance by:
 - Tracking replacement schedules for all equipment parts
 - Sending timely notifications for upcoming replacements
 - Managing equipment inventory and reorder process
@@ -14,15 +14,15 @@ Mike's BiPAP Tracker helps you stay on top of your BiPAP/CPAP equipment maintena
 
 ### Equipment Tracking
 - **ResMed AirCurve 10 VAuto BiPAP Machine**
-  - Air Filter (Monthly replacement)
+  - Air Filter (every 2 weeks replacement)
   - Water Chamber (6-month replacement)
   - Tubing (3-month replacement)
-  - Elbow Connector (6-month replacement)
+  - Elbow Connector (3-month replacement)
 
 - **ResMed AirFit F40 Full Face Mask**
-  - Mask Cushion (Monthly replacement)
-  - Mask Frame (6-month replacement)
-  - Headgear (6-month replacement)
+  - Mask Cushion (2-week replacement)
+  - Mask Frame (3-month replacement)
+  - Headgear (3-month replacement)
 
 ### Smart Notifications
 - Daily checks for upcoming part replacements
