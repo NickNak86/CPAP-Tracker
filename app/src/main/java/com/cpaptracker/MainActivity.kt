@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,33 +24,44 @@ import androidx.navigation.compose.rememberNavController
 import com.cpaptracker.ui.screens.DashboardScreen
 import com.cpaptracker.ui.screens.PartsListScreen
 import com.cpaptracker.ui.theme.CPAPTrackerTheme
+import com.cpaptracker.utils.NotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
     private val repository by lazy { (application as CPAPTrackerApp).repository }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        // Handle permission result if needed
+        if (isGranted) {
+            Log.d(TAG, "Notification permission granted")
+            Toast.makeText(
+                this,
+                "Notifications enabled! You'll receive replacement reminders.",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Log.w(TAG, "Notification permission denied")
+            Toast.makeText(
+                this,
+                "Notifications disabled. Enable in Settings to receive replacement reminders.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Request notification permission on Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
+        requestNotificationPermission()
 
         setContent {
             CPAPTrackerTheme {
@@ -59,6 +72,36 @@ class MainActivity : ComponentActivity() {
                     CPAPTrackerNavigation(repository)
                 }
             }
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    Log.d(TAG, "Notification permission already granted")
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    // User previously denied, show explanation
+                    Log.d(TAG, "Showing permission rationale")
+                    Toast.makeText(
+                        this,
+                        "CPAP Tracker needs notification permission to remind you about part replacements.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                else -> {
+                    // First time requesting
+                    Log.d(TAG, "Requesting notification permission")
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        } else {
+            Log.d(TAG, "Android version < 13, notification permission not required")
         }
     }
 }

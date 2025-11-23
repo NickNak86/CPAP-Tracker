@@ -4,6 +4,7 @@ import com.cpaptracker.data.database.AppDatabase
 import com.cpaptracker.data.models.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 
 class CPAPRepository(private val database: AppDatabase) {
@@ -117,11 +118,11 @@ class CPAPRepository(private val database: AppDatabase) {
     }
 
     suspend fun initializeAllParts() {
-        val parts = database.partDao().getAllParts()
-        parts.collect { partList ->
-            partList.forEach { part ->
-                initializePartSchedule(part.id)
-            }
+        // Use .first() instead of .collect() to get a single snapshot
+        // .collect() would never complete because Flow is ongoing
+        val partList = database.partDao().getAllParts().first()
+        partList.forEach { part ->
+            initializePartSchedule(part.id)
         }
     }
 }
