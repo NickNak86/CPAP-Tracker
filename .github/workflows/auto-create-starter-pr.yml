@@ -1,0 +1,98 @@
+name: Auto-create starter PRs from labeled issues
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-starter-pr:
+    if: contains(join(' ', github.event.issue.labels.*.name), 'create-pr')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Read issue title
+        id: issue
+        run: echo "title=${{ github.event.issue.title }}" >> $GITHUB_OUTPUT
+
+      - name: Create files and branch for CSV export helper
+        if: contains(steps.issue.outputs.title, 'Add CSV export feature')
+        run: |
+          branch="add-csv-export-helper-${GITHUB_RUN_ID}"
+          git config user.name "repo-automation"
+          git config user.email "actions@localhost"
+          git checkout -b "$branch"
+          mkdir -p scripts docs
+          cat > scripts/export_csv.py <<'PY'
+#!/usr/bin/env python3
+"""
+scripts/export_csv.py
+A simple export tool for BiPAP usage data.
+"""
+import argparse
+import json
+import logging
+import os
+from typing import List, Dict
+
+try:
+    import pandas as pd
+    _HAS_PANDAS = True
+except Exception:
+    _HAS_PANDAS = False
+
+def export_usage_to_csv(records: List[Dict], filename: str, columns=None):
+    default_cols = ["date", "usage_hours", "AHI", "mask_leak_rate", "pressure_settings"]
+    cols = columns or default_cols
+
+    if not records:
+        raise ValueError("No data to export")
+
+    os.makedirs(os.path.dirname(filename) or ".", exist_ok=True)
+
+    if _HAS_PANDAS:
+        df = pd.DataFrame(records)
+        for c in cols:
+            if c not in df.columns:
+                df[c] = None
+        df.to_csv(filename, columns=cols, index=False)
+    else:
+        import csv
+        with open(filename, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=cols)
+            writer.writeheader()
+            for r in records:
+                row = {c: r.get(c, "") for c in cols}
+                writer.writerow(row)
+
+    logging.getLogger(__name__).info("Exported %d records to %s", len(records), filename)
+PY
+          cat > docs/USAGE_EXPORT_CSV.md <<'MD'
+# CSV export helper
+
+This repository includes `scripts/export_csv.py` which can export a JSON array of usage records to CSV.
+
+Example usage:
+
+```bash
+python scripts/export_csv.py --input example_data.json --output usage_report.csv
+```
+MD
+          git add scripts/export_csv.py docs/USAGE_EXPORT_CSV.md
+          git commit -m "Add CSV export helper script"
+          git push -u origin "$branch"
+
+      - name: Create pull request
+        if: steps.issue.outputs.title != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --title "Auto-PR: ${{ steps.issue.outputs.title }}" \
+            --body "Automatically created from issue #${{ github.event.issue.number }}" \
+            --base main \
+            --head $(git branch --show-current)
